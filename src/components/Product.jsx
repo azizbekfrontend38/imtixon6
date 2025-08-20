@@ -16,9 +16,19 @@ export default function Product() {
   useEffect(() => {
     setLoading(true);
     fetch(`https://json-api.uz/api/project/fn38-6-exam/${lang}`)
-      .then((res) => res.json())
       .then((res) => {
-        setData(res.data);
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        return res.json(); // JSON formatda o‘qiyapmiz
+      })
+      .then((res) => {
+        console.log("Server JSON:", res);
+        setData(res.data); // JSON ichidagi data ni olish
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Xato:", err);
         setLoading(false);
       });
   }, [lang]);
